@@ -29,6 +29,11 @@ int packID;
 int lastACKID;
 char *recBuff;
 
+char** buff_window;
+int window_size;
+int curr_window_size;
+int win_slide;
+
 int getPackID(char *pack);
 
 char checksum(char *buffer, int buffSize);
