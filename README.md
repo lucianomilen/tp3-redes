@@ -1,4 +1,4 @@
 # tp3-redes
 ## UDP Sliding Window
-### Andre Rodrigues & Luciano Milen
-
+### André Henriques Rodrigues & Luciano Otoni Milen
+make compiles everything. Run as specified on documentation.
