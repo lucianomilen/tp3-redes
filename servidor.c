@@ -20,10 +20,17 @@ int sendBuff(char *buffer, int buffSize){
 
         createPack(pack, packID, DATA_TYPE, buffer, buffSize); //cria um pacote do tipo DATA_TYPE para enviar dados ao cliente
 
+        //**** if(tam_janela_atual_==tamjanela_){ ****//
+
         ACKs = tp_recvfrom(sockID, ACKMSG, MSG_SIZE, (so_addr*)&addr); // recebe os ACKs do cliente
 
         //nenhum ACK foi recebido. ou seja, o primeiro pacote deve ser reenviado
         while(ACKs == -1) {
+                /****
+                   int i;
+                   for(i=deslocamento_; i<tamjanela_; i++){
+                    id_pacote=idPacote(janela_[i%tamjanela_]);
+                ****/
                 pack_id = 0; //com o id 0, o primeiro
                 createPack(RESENT, pack_id, DATA_TYPE, HEADER + recBuff, buffSize);
                 tp_sendto(sockID, RESENT, buffSize + HEADER, (so_addr*)&addr);
@@ -41,6 +48,17 @@ int sendBuff(char *buffer, int buffSize){
         lastACKID++;
 
         strcpy(recBuff, pack); //grava no buffer o pacote recebido
+        /****
+           strcpy(janela_[deslocamento_],pacote);
+           deslocamento_=(deslocamento_+1)%tamjanela_;
+        ****/
+
+        /****
+           else{
+           tam_janela_atual_++;
+           strcpy(janela_[(tam_janela_atual_-1+deslocamento_)%tamjanela_],pacote); //Copia o pacote para a primeira posição vazia da janela
+           }
+        ****/
 
         // manda o pacote pro cliente, com o timeout registrado!!!
         SENT = tp_sendto(sockID, pack, MSG_SIZE, (so_addr*)&addr);
@@ -91,6 +109,8 @@ int startServer(int serverPort, int buffSize){ //init o servidor com as funçõe
         resentPacks = 0; // as variáveis de estatística definidas no common.h são inicializadas
 
         recBuff = (char*) malloc(sizeof(char) * (HEADER + buffSize));
+
+        //**** criaJanela(porto_servidor,tam_buffer,tam_janela); ****//
 
         return sockID; //cria o socket e retorna pro main informar o cliente
 }
